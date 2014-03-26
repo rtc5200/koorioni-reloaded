@@ -1,0 +1,7 @@
+name: Koorioni
+main: jp._RS_.Koorioni.Main
+version: 0.1.0
+commands:
+  k:
+    description: Commands for Koorioni
+    usage: /<command> [args]...
