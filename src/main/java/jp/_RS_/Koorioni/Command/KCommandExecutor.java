@@ -33,6 +33,9 @@ public class KCommandExecutor implements CommandExecutor{
 		}else if(args[0].equalsIgnoreCase("exit"))
 		{
 			new Command_Exit(main,sender,args);
+		}else if(args[0].equalsIgnoreCase("reload"))
+		{
+			new Command_Reload(main,sender,args);
 		}
 		return true;
 	}

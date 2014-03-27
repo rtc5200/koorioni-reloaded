@@ -5,3 +5,6 @@ commands:
   k:
     description: Commands for Koorioni
     usage: /<command> [args]...
+  s:
+    description: toggle autosneak
+    usage: /<command>
