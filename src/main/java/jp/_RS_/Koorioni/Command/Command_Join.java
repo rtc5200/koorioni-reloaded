@@ -9,25 +9,21 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-public class Command_Join extends RejectableCommandBase
+public class Command_Join extends CommandBase
 {
-	private Main main;
-	private CommandSender sender;
 	public Command_Join(Main main,CommandSender sender,String[] args)
 	{
-		this.main = main;
-		this.sender = sender;
-		if(sender instanceof Player)ExecuteFromPlayer((Player) sender,args);
-		if(sender instanceof BlockCommandSender)ExecuteFromCommandBlock((BlockCommandSender) sender,args);
-		if(sender instanceof ConsoleCommandSender)ExecuteFromConsole((ConsoleCommandSender) sender,args);
+		super(main,sender,args);
 	}
-	public void ExecuteFromPlayer(Player p, String[] args) {
+	@Override
+	public void ExecuteFromPlayer() {
+		Player p = (Player) sender;
 		if(args.length == 1)main.getSbManager().JoinRedTeam(p);
 		else if(args.length == 2)
 		{
 			if(!p.isOp())
 			{
-				reject(sender,RejectReason.NotAllowed);
+				reject(sender,"権限設定を確認してください。");
 				return;
 			}
 			Player t = Bukkit.getPlayerExact(args[1]);
@@ -37,14 +33,16 @@ public class Command_Join extends RejectableCommandBase
 				return;
 			}
 			main.getSbManager().JoinRedTeam(t);
+			p.teleport(main.getConfigHandler().getStartLocation());
 		}else{
-			reject(sender,RejectReason.TooMuchArgs);
+			reject(sender,"引数が多すぎます。");
 		}
 	}
-	public void ExecuteFromCommandBlock(BlockCommandSender sender,String[] args) {
+	@Override
+	public void ExecuteFromCommandBlock() {
 		if(args.length == 1)
 		{
-			reject(sender,RejectReason.NotEnoughArgs);
+			reject(sender,"引数が不足しています。");
 			return;
 		}
 		if(args.length == 2)
@@ -52,12 +50,13 @@ public class Command_Join extends RejectableCommandBase
 			Player t = Bukkit.getPlayerExact(args[1]);
 			if(t == null)
 			{
-				reject(sender,RejectReason.InvalidArgs);
+				reject(sender,"不正な引数です。");
 				return;
 			}
 			main.getSbManager().JoinRedTeam(t);
+			t.teleport(main.getConfigHandler().getStartLocation());
 		}else{
-			reject(sender,RejectReason.TooMuchArgs);
+			reject(sender,"引数が多すぎます。");
 		}
 
 	}

@@ -2,17 +2,22 @@ package jp._RS_.Koorioni.Scoreboard;
 
 import java.util.ArrayList;
 
+import net.minecraft.server.v1_6_R2.Packet205ClientCommand;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.craftbukkit.v1_6_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -28,6 +33,7 @@ import org.bukkit.scoreboard.Team;
 
 import jp._RS_.Koorioni.Main;
 import jp._RS_.Koorioni.Variables;
+import jp._RS_.Koorioni.Task.KeepInventoryThread;
 import jp._RS_.Koorioni.Task.TeamNumberCheckTask;
 
 public class SbManager implements Listener {
@@ -77,7 +83,7 @@ public class SbManager implements Listener {
 		black.setPrefix(ChatColor.BLACK.toString());
 		black.setSuffix(ChatColor.RESET.toString());
 		red.setCanSeeFriendlyInvisibles(true);
-		Bukkit.getScheduler().runTaskTimer(main, new TeamNumberCheckTask(this), 0L, 20L);
+		//Bukkit.getScheduler().runTaskTimer(main, new TeamNumberCheckTask(this), 20L, 20L);
 		for(Player p : Bukkit.getOnlinePlayers())
 		{
 			p.setScoreboard(sb);
@@ -95,12 +101,19 @@ public class SbManager implements Listener {
 		p.getInventory().addItem(main.getConfigHandler().getSpeedItem());
 		p.getInventory().addItem(main.getConfigHandler().getInvisibilityItem());
 		p.updateInventory();
+		main.getConfigHandler().getStartLocation();
+		p.sendMessage("スポーン後" + ChatColor.GOLD + main.getConfigHandler().getSpawnProtectionTime() + ChatColor.RESET
+				+ "秒間はスポーン保護が適用されます。");
+		main.getPlayerException().addException(p);
 	}
 	public void RestoreToRedTeam(Player p)
 	{
 		red.addPlayer(p);
 		p.setDisplayName(ChatColor.RED + p.getName() + ChatColor.RESET);
 		updateSidebar();
+		main.getPlayerException().addException(p);
+		p.sendMessage("氷解除後" + ChatColor.GOLD + main.getConfigHandler().getSpawnProtectionTime() + ChatColor.RESET
+				+ "秒間はスポーン保護が適用されます。");
 	}
 	public void JoinBlueTeam(Player p)
 	{
@@ -345,5 +358,26 @@ public class SbManager implements Listener {
 				e.setCancelled(true);
 			}
 		}
+	}
+	@EventHandler
+	public void Respawn(PlayerDeathEvent e)
+	{
+		Player p = e.getEntity();
+		Location loc = p.getLocation();
+		ItemStack[] b = p.getInventory().getArmorContents();
+		ItemStack[] a = p.getInventory().getContents();
+		e.getDrops().clear();
+		e.setKeepLevel(true);
+		e.setDroppedExp(0);
+		Packet205ClientCommand packet = new Packet205ClientCommand();
+		packet.a = 1;
+		((CraftPlayer)p).getHandle().playerConnection.a(packet);
+		Bukkit.getScheduler().scheduleAsyncDelayedTask(main, new KeepInventoryThread(p,a,b));
+		p.teleport(loc);
+	}
+	@EventHandler
+	public void onBedEnter(PlayerBedEnterEvent e)
+	{
+		if(isPlaying(e.getPlayer()))e.setCancelled(true);
 	}
 }

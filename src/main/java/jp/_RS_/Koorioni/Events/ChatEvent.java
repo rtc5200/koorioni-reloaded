@@ -26,20 +26,21 @@ public class ChatEvent implements Listener{
 			for(Player p1 : m.getRedPlayersList())
 			{
 				if(p1 != null)p1.sendMessage(ChatColor.AQUA + "[チーム]" + ChatColor.RESET + "<" +e.getPlayer().getDisplayName() + "> " + e.getMessage());
-				//(DebugCode)if(e.getMessage().contains("black"))m.JoinBlackTeam(p);
+				e.setCancelled(true);
 			}
-
 		}else if(m.isBlueTeam(p))
 		{
 			for(Player p1 : m.getBluePlayersList())
 			{
 				if(p1 != null)p1.sendMessage(ChatColor.AQUA + "[チーム]" + ChatColor.RESET + "<" +e.getPlayer().getDisplayName() + "> " + e.getMessage());
+				e.setCancelled(true);
 			}
 		}else if(m.isBlackTeam(p))
 		{
 			for(Player p1 : m.getBlackPlayersList())
 			{
 				if(p1 != null)p1.sendMessage(ChatColor.AQUA + "[チーム]" + ChatColor.RESET + "<" +e.getPlayer().getDisplayName() + "> " + e.getMessage());
+				e.setCancelled(true);
 			}
 		}
 	}

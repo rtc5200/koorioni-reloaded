@@ -9,19 +9,16 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-public class Command_Reload implements CommandBase {
-	private ConfigHandler config;
+public class Command_Reload extends CommandBase {
 	public Command_Reload(Main main,CommandSender sender,String[] args) {
-		config = main.getConfigHandler();
-		if(sender instanceof Player)ExecuteFromPlayer((Player) sender,args);
-		if(sender instanceof BlockCommandSender)ExecuteFromCommandBlock((BlockCommandSender) sender,args);
-		if(sender instanceof ConsoleCommandSender)ExecuteFromConsole((ConsoleCommandSender) sender,args);
+		super(main,sender,args);
 	}
-
-	public void ExecuteFromPlayer(Player p, String[] args) {
+	@Override
+	public void ExecuteFromPlayer() {
+		Player p = (Player)sender;
 		if(!p.isOp())
 		{
-			p.sendMessage(ChatColor.RED + "権限設定を確認してください。");
+			reject(sender,"権限設定を確認してください。");
 			return;
 		}
 		if(args.length  == 1)
@@ -30,32 +27,27 @@ public class Command_Reload implements CommandBase {
 			p.sendMessage(ChatColor.GREEN + "リロードしました。");
 			return;
 		}
-		p.sendMessage(ChatColor.RED + "引数が多すぎます。");
+		reject(sender, "引数が多すぎます。");
 		return;
-
 	}
-
-	public void ExecuteFromCommandBlock(BlockCommandSender sender, String[] args) {
+	@Override
+	public void ExecuteFromCommandBlock() {
 		if(args.length  == 1)
 		{
 			config.reload();
 			return;
 		}
 		return;
-
 	}
-
-	public void ExecuteFromConsole(ConsoleCommandSender sender, String[] args) {
+	@Override
+	public void ExecuteFromConsole() {
 		if(args.length  == 1)
 		{
 			config.reload();
 			sender.sendMessage(ChatColor.GREEN + "リロードしました。");
 			return;
 		}
-		sender.sendMessage(ChatColor.RED + "引数が多すぎます。");
+		reject(sender,"引数が多すぎます。");
 		return;
-
-
 	}
-
 }

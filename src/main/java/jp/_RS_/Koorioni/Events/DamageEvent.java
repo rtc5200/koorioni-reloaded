@@ -1,9 +1,12 @@
 package jp._RS_.Koorioni.Events;
 
+import java.util.ArrayList;
+
 import jp._RS_.Koorioni.Main;
 import jp._RS_.Koorioni.Scoreboard.SbManager;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -32,8 +35,7 @@ public class DamageEvent implements Listener{
 				if(manager.isBlueTeam(p1) && manager.isRedTeam(p2))
 				{
 					Bukkit.getServer().getPluginManager().callEvent(new PlayerTouchEvent(p1,p2));
-				}
-				if(manager.isRedTeam(p1) && manager.isBlackTeam(p2))
+				}else if(manager.isRedTeam(p1) && manager.isBlackTeam(p2))
 				{
 					Bukkit.getServer().getPluginManager().callEvent(new PlayerRescueEvent(p1,p2));
 				}
@@ -50,13 +52,8 @@ public class DamageEvent implements Listener{
 	{
 		if(e.getEntity() instanceof Player)
 		{
-			Player p = (Player) e.getEntity();
-			if(manager.isPlaying(p))
-			{
-				e.setDamage(0);
-				e.setCancelled(true);
-			}
+			e.setDamage(0);
+			e.setCancelled(true);
 		}
 	}
-
 }

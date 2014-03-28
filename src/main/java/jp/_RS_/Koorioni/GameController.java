@@ -22,14 +22,17 @@ import jp._RS_.Koorioni.Util.PlayerSort;
 public class GameController {
 	private Main main;
 	private SbManager manager;
+	private ConfigHandler config;
 	private CountDown count;
 	private ArrayList<BukkitTask> startTasks = new ArrayList<BukkitTask>();
 	public GameController(Main main) {
 		this.main = main;
 		this.manager = main.getSbManager();
+		this.config = main.getConfigHandler();
 	}
-	public void start(int a)
+	private void intialize()
 	{
+		main.getPlayerException().clearExceptionList();
 		if(startTasks.size() != 0)
 		{
 			for(BukkitTask t : startTasks)
@@ -38,9 +41,14 @@ public class GameController {
 			}
 			startTasks.clear();
 		}
-		count = new CountDown(main.getConfigHandler().getGameTime(),main);
+		if(count != null)count.setCancelled(true);
+		count = new CountDown(config.getGameTime(),main);
+	}
+	public void start(int a)
+	{
+		intialize();
 		ArrayList<Player> que = new ArrayList<Player>();
-		for(Player p : PlayerSort.sort(Bukkit.getOnlinePlayers()))
+		for(Player p : PlayerSort.sort(manager,Bukkit.getOnlinePlayers()))
 		{
 			manager.JoinRedTeam(p);
 			p.setMaxHealth(20);
@@ -59,14 +67,14 @@ public class GameController {
 				Bukkit.broadcastMessage("ゲームを開始します。");
 				for(Player p : manager.getRedPlayersList())
 				{
-					p.teleport(main.getConfigHandler().getStartLocation());
+					p.teleport(config.getStartLocation());
 				}
-				Bukkit.broadcastMessage("鬼が放出されるまでの" + ChatColor.GOLD + main.getConfigHandler().getOniWaitTime()
+				Bukkit.broadcastMessage("鬼が放出されるまでの" + ChatColor.GOLD + config.getOniWaitTime()
 						+ ChatColor.RESET+ "秒間、逃げてください。");
 			}
 		}, 40L));
 		startTasks.add(bs.runTaskTimer(main, new Runnable(){
-			private int i = new Integer(main.getConfigHandler().getOniWaitTime().toString());
+			private int i = new Integer(config.getOniWaitTime().toString());
 			private int max = i;
 			public void run() {
 				if(i >= 0)
@@ -90,12 +98,12 @@ public class GameController {
 				}
 				for(Player p : manager.getBluePlayersList())
 				{
-					p.teleport(main.getConfigHandler().getOniSpawnLocation());
+					p.teleport(config.getOniSpawnLocation());
 				}
 				count.start();
 				startTasks.clear();
 			}
-		}, main.getConfigHandler().getOniWaitTime()*20 + 42L));
+		}, config.getOniWaitTime()*20 + 42L));
 	}
 	public void exit()
 	{

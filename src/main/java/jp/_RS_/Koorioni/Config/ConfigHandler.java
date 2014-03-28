@@ -27,6 +27,7 @@ public class ConfigHandler {
 	private int ItemAmount_INVISIBILITY;
 	private Location OniSpawnLocation;
 	private Long OniWaitTime;
+	private Long SpawnProtectionTime;
 	public ConfigHandler(File file)
 	{
 		this.config = YamlConfiguration.loadConfiguration(file);
@@ -40,6 +41,7 @@ public class ConfigHandler {
 		config.addDefault("WorldName", "world");
 		config.addDefault("StartLocation", "0,0,0");
 		config.addDefault("GameTime", 60L);
+		config.addDefault("SpawnProtectionTime", 10);
 		config.addDefault("Oni.SpeedLevel", 0.6f);
 		config.addDefault("Oni.SpawnLocation", "0,0,0");
 		config.addDefault("Oni.WaitTime",30L);
@@ -66,6 +68,7 @@ public class ConfigHandler {
 		hspeedlev = Float.parseFloat(config.getString("Oni.SpeedLevel"));
 		OniSpawnLocation = readLocation(config.getString("Oni.SpawnLocation"));
 		OniWaitTime = config.getLong("Oni.WaitTime");
+		SpawnProtectionTime = (long) config.getInt("SpawnProtectionTime");
 		int spl = config.getInt("Item.Speed.Level") - 1;
 		int spd = config.getInt("Item.Speed.Duration")*20;
 		if(spl < 0 || spd <= 0)
@@ -149,6 +152,10 @@ public class ConfigHandler {
 	public Long getOniWaitTime()
 	{
 		return OniWaitTime;
+	}
+	public Long getSpawnProtectionTime()
+	{
+		return SpawnProtectionTime;
 	}
 	public void reload()
 	{

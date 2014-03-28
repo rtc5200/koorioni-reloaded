@@ -30,36 +30,39 @@ public class CountDown{
 	public void setCancelled(boolean cancel){
 		canceled = cancel;
 	}
+	protected void playSound(Sound s,float volume,float pitch)
+	{
+		for(Player p : Bukkit.getOnlinePlayers())
+		{
+			p.playSound(p.getLocation(), s, volume, pitch);
+		}
+	}
+	protected void setExpBar()
+	{
+		for(Player p : Bukkit.getOnlinePlayers())
+		{
+			p.setLevel((int) time);
+			p.setExp(ExpCalc.calcExpTimer(time, max));
+		}
+	}
 
 	private class CD implements Runnable{
 
 		public void run(){
 			if(time <= 0 && !canceled){
 				canceled = true;
-				for(Player p : Bukkit.getOnlinePlayers())
-				{
-					p.setLevel(0);
-					p.setExp(0);
-				}
+				setExpBar();
 				plugin.getController().exit();
 				//カウントダウン終了
 			}
 			if(!canceled){
 				time--;
-				for(Player p : Bukkit.getOnlinePlayers())
+				if (time <= 10 || time == 30)
 				{
-					p.setLevel((int) time);
-					p.setExp(ExpCalc.calcExpTimer(time, max));
-					if(time <= 10)
-					{
-						Bukkit.broadcastMessage("残り" + ChatColor.GOLD + time + ChatColor.RESET + "秒です。");
-						p.playSound(p.getLocation(), Sound.NOTE_PIANO, 100, 50);
-					}else if(time <= 30)
-					{
-						if(time == 30)Bukkit.broadcastMessage("残り" + ChatColor.GOLD + "30" + ChatColor.RESET + "秒です。");
-						p.playSound(p.getLocation(), Sound.NOTE_STICKS, 100, 50);
-					}
+					Bukkit.broadcastMessage("残り" + ChatColor.GOLD + time + ChatColor.RESET + "秒です。");
+					if(time<= 10)playSound(Sound.NOTE_PIANO, 100, 50);
 				}
+				setExpBar();
 				//カウントダウン中
 			}
 		}

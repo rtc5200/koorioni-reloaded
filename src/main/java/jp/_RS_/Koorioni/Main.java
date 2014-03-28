@@ -8,6 +8,7 @@ import jp._RS_.Koorioni.Events.ChatEvent;
 import jp._RS_.Koorioni.Events.DamageEvent;
 import jp._RS_.Koorioni.Events.ItemEvent;
 import jp._RS_.Koorioni.Events.KoorioniEvents;
+import jp._RS_.Koorioni.Events.PlayerExceptionOfEvent;
 import jp._RS_.Koorioni.Scoreboard.SbManager;
 import jp._RS_.Koorioni.Task.SneakingTask;
 
@@ -21,6 +22,7 @@ public class Main extends JavaPlugin{
 	private PlayerFreezer freezer;
 	private KoorioniEvents ke;
 	private SneakingTask st;
+	private PlayerExceptionOfEvent pe;
 	@Override
 	public void onEnable()
 	{
@@ -36,11 +38,13 @@ public class Main extends JavaPlugin{
 		log.info("イベント登録開始....");
 		ke = new KoorioniEvents(this);
 		freezer = new PlayerFreezer(this);
+		pe = new PlayerExceptionOfEvent(this);
 		getServer().getPluginManager().registerEvents(new DamageEvent(this), this);
 		getServer().getPluginManager().registerEvents(ke, this);
 		getServer().getPluginManager().registerEvents(new ItemEvent(this),this);
 		getServer().getPluginManager().registerEvents(freezer,this);
 		getServer().getPluginManager().registerEvents(new ChatEvent(this), this);
+		getServer().getPluginManager().registerEvents(pe, this);
 		log.info("イベント登録完了.");
 		log.info("ゲームコントローラーロード開始....");
 		c = new GameController(this);
@@ -80,6 +84,10 @@ public class Main extends JavaPlugin{
 	public SneakingTask getAutoSneak()
 	{
 		return st;
+	}
+	public PlayerExceptionOfEvent getPlayerException()
+	{
+		return pe;
 	}
 
 }

@@ -1,5 +1,6 @@
 package jp._RS_.Koorioni.Events;
 
+import jp._RS_.Koorioni.GameController;
 import jp._RS_.Koorioni.Main;
 import jp._RS_.Koorioni.Scoreboard.SbManager;
 
@@ -12,10 +13,12 @@ import org.bukkit.scoreboard.Score;
 public class KoorioniEvents implements Listener{
 	private Main main;
 	private SbManager manager;
+	private GameController c;
 	public KoorioniEvents(Main main)
 	{
 		this.main = main;
 		manager = main.getSbManager();
+		c = main.getController();
 	}
 	@EventHandler(priority = EventPriority.LOW)
 	public void onTouch(PlayerTouchEvent e)
@@ -26,6 +29,7 @@ public class KoorioniEvents implements Listener{
 			Bukkit.broadcastMessage(e.getTo().getDisplayName() + "が" + e.getBy().getDisplayName() + "に凍らされてしまった!");
 			Score score = manager.getScore(e.getBy());
 			score.setScore(score.getScore() + 1);
+			if(manager.getRedSize() <= 0)c.exit();
 		}
 	}
 	@EventHandler(priority = EventPriority.LOW)

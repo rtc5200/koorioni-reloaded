@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -68,13 +69,18 @@ public class ItemEvent implements Listener{
 			}
 		}
 	}
+	@EventHandler
+	public void onDrop(PlayerDropItemEvent e)
+	{
+		e.setCancelled(true);
+	}
 	private void ItemUse(Player p,ItemStack s)
 	{
-				if(s.getAmount() == 1)
-				{
-					p.getInventory().remove(s);
-				}else{
-					s.setAmount(s.getAmount() - 1);
-				}
+		if(s.getAmount() == 1)
+		{
+			p.getInventory().remove(s);
+		}else{
+			s.setAmount(s.getAmount() - 1);
+		}
 	}
 }

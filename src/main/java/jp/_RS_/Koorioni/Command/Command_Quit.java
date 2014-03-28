@@ -9,18 +9,15 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-public class Command_Quit extends RejectableCommandBase {
-	private Main main;
+public class Command_Quit extends CommandBase {
 	private CommandSender sender;
 	public Command_Quit(Main main,CommandSender sender,String[] args)
 	{
-		this.main = main;
-		this.sender = sender;
-		if(sender instanceof Player)ExecuteFromPlayer((Player) sender,args);
-		if(sender instanceof BlockCommandSender)ExecuteFromCommandBlock((BlockCommandSender) sender,args);
-		if(sender instanceof ConsoleCommandSender)ExecuteFromConsole((ConsoleCommandSender) sender,args);
+		super(main,sender,args);
 	}
-	public void ExecuteFromPlayer(Player p, String[] args) {
+	@Override
+	public void ExecuteFromPlayer() {
+		Player p  =(Player)sender;
 		if(args.length == 1){
 			if(main.getSbManager().isPlaying(p))
 				{
@@ -34,13 +31,13 @@ public class Command_Quit extends RejectableCommandBase {
 		{
 			if(!p.isOp())
 			{
-				reject(sender,RejectReason.NotAllowed);
+				reject(sender,"権限設定を確認してください。");
 				return;
 			}
 			Player t = Bukkit.getPlayerExact(args[1]);
 			if(t == null)
 			{
-				reject(sender,RejectReason.InvalidArgs);
+				reject(sender,"不正な引数です。");
 				return;
 			}
 			if(!main.getSbManager().isPlaying(p))
@@ -50,11 +47,32 @@ public class Command_Quit extends RejectableCommandBase {
 			}
 			main.getSbManager().Quit(t);
 		}else{
-			reject(sender,RejectReason.TooMuchArgs);
+			reject(sender,"引数が多すぎます。");
 		}
 	}
-	public void ExecuteFromCommandBlock(BlockCommandSender sender, String[] args) {
-		// TODO 自動生成されたメソッド・スタブ
-
+	@Override
+	public void ExecuteFromCommandBlock()
+	{
+		if(args.length == 1){
+			reject(sender,"引数が足りません。");
+			return;
+		}
+		else if(args.length == 2)
+		{
+			Player t = Bukkit.getPlayerExact(args[1]);
+			if(t == null)
+			{
+				reject(sender,"不正な引数です。");
+				return;
+			}
+			if(!main.getSbManager().isPlaying(t))
+			{
+				reject(sender,"プレイヤーは参加していません。");
+				return;
+			}
+			main.getSbManager().Quit(t);
+		}else{
+			reject(sender,"引数が多すぎます。");
+		}
 	}
 }

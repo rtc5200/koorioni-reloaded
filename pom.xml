@@ -2,19 +2,15 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>jp._RS_</groupId>
   <artifactId>Koorioni</artifactId>
-  <version>0.1.0</version>
-  <repositories>
-   <repository>
-     <id>bukkit-repo</id>
-     <url>http://repo.bukkit.org/content/groups/public/</url>
-   </repository>
- </repositories>
- <dependencies>
-   <dependency>
-     <groupId>org.bukkit</groupId>
-     <artifactId>bukkit</artifactId>
-     <version>1.6.2-R1.0</version>
-   </dependency>
- </dependencies>
+  <version>0.2.1</version>
+  <dependencies>
+  	<dependency>
+  		<groupId>org.bukkit</groupId>
+  		<artifactId>craftbukkit</artifactId>
+  		<scope>system</scope>
+  		<systemPath>C:\MODDev\Bukkit\BukkitJars\craftbukkit-1.6.2-R1.0.jar</systemPath>
+  		<version>1.6.2-R1.0</version>
+  	</dependency>
+  </dependencies>
 </project>
 

@@ -12,8 +12,8 @@ public class PlayerPicker {
 	public static ArrayList<Player> pick(List<Player>list,int amount)
 	{
 		ArrayList<Player> result = new ArrayList<Player>();
-		Collections.shuffle(list);
 		Random r = new Random();
+		Collections.shuffle(list,r);
 		for(int i = 0; i < amount;i++)
 		{
 			int t = r.nextInt(list.size());
