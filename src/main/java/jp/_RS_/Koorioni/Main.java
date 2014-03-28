@@ -35,6 +35,9 @@ public class Main extends JavaPlugin{
 		manager = new SbManager(this);
 		getServer().getPluginManager().registerEvents(manager, this);
 		log.info("チームシステムロード完了.");
+		log.info("ゲームコントローラーロード開始....");
+		c = new GameController(this);
+		log.info("ゲームコントローラーロード完了.");
 		log.info("イベント登録開始....");
 		ke = new KoorioniEvents(this);
 		freezer = new PlayerFreezer(this);
@@ -46,9 +49,6 @@ public class Main extends JavaPlugin{
 		getServer().getPluginManager().registerEvents(new ChatEvent(this), this);
 		getServer().getPluginManager().registerEvents(pe, this);
 		log.info("イベント登録完了.");
-		log.info("ゲームコントローラーロード開始....");
-		c = new GameController(this);
-		log.info("ゲームコントローラーロード完了.");
 		log.info("タスクのスケジュール開始....");
 		st  = new SneakingTask(this);
 		getServer().getScheduler().runTaskTimer(this, st, 0L, 1L);

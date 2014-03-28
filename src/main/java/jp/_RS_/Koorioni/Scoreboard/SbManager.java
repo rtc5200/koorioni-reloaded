@@ -31,6 +31,7 @@ import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
+import jp._RS_.Koorioni.GameController;
 import jp._RS_.Koorioni.Main;
 import jp._RS_.Koorioni.Variables;
 import jp._RS_.Koorioni.Task.KeepInventoryThread;
@@ -47,7 +48,6 @@ public class SbManager implements Listener {
 	private OfflinePlayer reo;
 	private OfflinePlayer beo;
 	private OfflinePlayer bko;
-
 	public SbManager(Main main)
 	{
 		this.main = main;
@@ -98,8 +98,12 @@ public class SbManager implements Listener {
 		updateSidebar();
 		p.getInventory().remove(Material.FEATHER);
 		p.getInventory().remove(Material.STICK);
-		p.getInventory().addItem(main.getConfigHandler().getSpeedItem());
-		p.getInventory().addItem(main.getConfigHandler().getInvisibilityItem());
+		ItemStack i1 = main.getConfigHandler().getSpeedItem();
+		i1.setAmount(calcAmount(i1.getAmount(),main.getController().getRemainingTimePercent()));
+		ItemStack i2 = main.getConfigHandler().getInvisibilityItem();
+		i2.setAmount(calcAmount(i2.getAmount(),main.getController().getRemainingTimePercent()));
+		p.getInventory().addItem(i1);
+		p.getInventory().addItem(i2);
 		p.updateInventory();
 		main.getConfigHandler().getStartLocation();
 		p.sendMessage("スポーン後" + ChatColor.GOLD + main.getConfigHandler().getSpawnProtectionTime() + ChatColor.RESET
@@ -319,8 +323,16 @@ public class SbManager implements Listener {
 		pi.remove(Material.FEATHER);
 		pi.remove(Material.STICK);
 		p.updateInventory();
+		p.setExp(0);
+		p.setLevel(0);
 		p.teleport(p.getLocation().getWorld().getSpawnLocation());
 	}
+
+	private int calcAmount(int amount,double percent)
+	{
+		return (int)(percent * amount);
+	}
+
 	@EventHandler(priority = EventPriority.LOW)
 	public void onMove(PlayerMoveEvent e)
 	{

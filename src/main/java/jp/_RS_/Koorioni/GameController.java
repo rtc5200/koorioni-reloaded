@@ -15,7 +15,6 @@ import org.bukkit.scheduler.BukkitTask;
 import jp._RS_.Koorioni.Config.ConfigHandler;
 import jp._RS_.Koorioni.Scoreboard.SbManager;
 import jp._RS_.Koorioni.Timer.CountDown;
-import jp._RS_.Koorioni.Util.ExpCalc;
 import jp._RS_.Koorioni.Util.PlayerPicker;
 import jp._RS_.Koorioni.Util.PlayerSort;
 
@@ -82,7 +81,7 @@ public class GameController {
 					for(Player p : Bukkit.getOnlinePlayers())
 					{
 						p.setLevel(i);
-						p.setExp(ExpCalc.calcExpTimer(i, max));
+						p.setExp(i / max);
 						p.playSound(p.getLocation(), Sound.NOTE_PIANO,100, 100);
 					}
 					i--;
@@ -176,8 +175,10 @@ public class GameController {
 		{
 			p.teleport(p.getLocation().getWorld().getSpawnLocation());
 		}
-
-
+		intialize();
 	}
-
+	public float getRemainingTimePercent()
+	{
+		return count.getRemainingTimePercent();
+	}
 }

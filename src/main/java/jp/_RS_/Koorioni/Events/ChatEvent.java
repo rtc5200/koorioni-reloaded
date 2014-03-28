@@ -21,6 +21,10 @@ public class ChatEvent implements Listener{
 	public void onChat(PlayerChatEvent e)
 	{
 		Player p = e.getPlayer();
+		if(e.getMessage().contains("redsize"))
+		{
+			p.sendMessage("RedSize = " + m.getRedSize());
+		}
 		if(m.isRedTeam(p))
 		{
 			for(Player p1 : m.getRedPlayersList())

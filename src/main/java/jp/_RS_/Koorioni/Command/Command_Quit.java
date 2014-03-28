@@ -10,7 +10,6 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 public class Command_Quit extends CommandBase {
-	private CommandSender sender;
 	public Command_Quit(Main main,CommandSender sender,String[] args)
 	{
 		super(main,sender,args);

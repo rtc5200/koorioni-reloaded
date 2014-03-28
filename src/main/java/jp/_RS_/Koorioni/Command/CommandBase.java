@@ -30,22 +30,20 @@ public abstract class CommandBase{
 		if(sender instanceof BlockCommandSender)ExecuteFromCommandBlock();
 		if(sender instanceof ConsoleCommandSender)ExecuteFromConsole();
 	}
-	public void ExecuteFromPlayer()
+	protected void ExecuteFromPlayer()
 	{
 		reject(sender,"対応していません。");
 	}
-	public void ExecuteFromCommandBlock()
+	protected void ExecuteFromCommandBlock()
 	{
 		reject(sender,"対応していません。");
 	}
-	public void ExecuteFromConsole()
+	protected void ExecuteFromConsole()
 	{
 		reject(sender,"対応していません。");
 	}
-	public void reject(CommandSender sender,String s)
+	protected void reject(CommandSender sender,String s)
 	{
 		sender.sendMessage(ChatColor.RED + s);
 	}
-
-
 }

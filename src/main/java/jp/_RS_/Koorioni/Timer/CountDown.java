@@ -1,10 +1,6 @@
 package jp._RS_.Koorioni.Timer;
 
-
-
-
 import jp._RS_.Koorioni.Main;
-import jp._RS_.Koorioni.Util.ExpCalc;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -42,8 +38,12 @@ public class CountDown{
 		for(Player p : Bukkit.getOnlinePlayers())
 		{
 			p.setLevel((int) time);
-			p.setExp(ExpCalc.calcExpTimer(time, max));
+			p.setExp(getRemainingTimePercent());
 		}
+	}
+	public float getRemainingTimePercent()
+	{
+		return (float)time / (float)max;
 	}
 
 	private class CD implements Runnable{
