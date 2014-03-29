@@ -17,11 +17,13 @@ public class KoorioniEvents implements Listener{
 	private SbManager manager;
 	private GameController c;
 	private BukkitTask ft;
+	private CoolTimeManager ct;
 	public KoorioniEvents(Main main)
 	{
 		this.main = main;
 		manager = main.getSbManager();
 		c = main.getController();
+		ct = main.getCoolTimeManager();
 	}
 	@EventHandler
 	public void onTouch(PlayerTouchEvent e)
@@ -32,6 +34,8 @@ public class KoorioniEvents implements Listener{
 			Bukkit.broadcastMessage(e.getTo().getDisplayName() + "が" + e.getBy().getDisplayName() + "に凍らされてしまった!");
 			Score score = manager.getScore(e.getBy());
 			score.setScore(score.getScore() + 1);
+			ct.addOniStiff(e.getBy());
+			ct.addOnTouchProtection(e.getTo());
 			if(ft == null)
 			{
 				if(manager.getRedSize() <= 0)

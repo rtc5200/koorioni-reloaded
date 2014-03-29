@@ -4,11 +4,7 @@ import java.util.logging.Logger;
 
 import jp._RS_.Koorioni.Command.KCommandExecutor;
 import jp._RS_.Koorioni.Config.ConfigHandler;
-import jp._RS_.Koorioni.Events.ChatEvent;
-import jp._RS_.Koorioni.Events.DamageEvent;
-import jp._RS_.Koorioni.Events.ItemEvent;
-import jp._RS_.Koorioni.Events.KoorioniEvents;
-import jp._RS_.Koorioni.Events.PlayerExceptionOfEvent;
+import jp._RS_.Koorioni.Events.*;
 import jp._RS_.Koorioni.Scoreboard.SbManager;
 import jp._RS_.Koorioni.Task.SneakingTask;
 
@@ -22,7 +18,7 @@ public class Main extends JavaPlugin{
 	private PlayerFreezer freezer;
 	private KoorioniEvents ke;
 	private SneakingTask st;
-	private PlayerExceptionOfEvent pe;
+	private CoolTimeManager ct;
 	@Override
 	public void onEnable()
 	{
@@ -39,15 +35,15 @@ public class Main extends JavaPlugin{
 		c = new GameController(this);
 		log.info("ゲームコントローラーロード完了.");
 		log.info("イベント登録開始....");
+		ct = new CoolTimeManager(this);
 		ke = new KoorioniEvents(this);
 		freezer = new PlayerFreezer(this);
-		pe = new PlayerExceptionOfEvent(this);
 		getServer().getPluginManager().registerEvents(new DamageEvent(this), this);
 		getServer().getPluginManager().registerEvents(ke, this);
 		getServer().getPluginManager().registerEvents(new ItemEvent(this),this);
 		getServer().getPluginManager().registerEvents(freezer,this);
 		getServer().getPluginManager().registerEvents(new ChatEvent(this), this);
-		getServer().getPluginManager().registerEvents(pe, this);
+		getServer().getPluginManager().registerEvents(ct, this);
 		log.info("イベント登録完了.");
 		log.info("タスクのスケジュール開始....");
 		st  = new SneakingTask(this);
@@ -85,9 +81,8 @@ public class Main extends JavaPlugin{
 	{
 		return st;
 	}
-	public PlayerExceptionOfEvent getPlayerException()
+	public CoolTimeManager getCoolTimeManager()
 	{
-		return pe;
+		return ct;
 	}
-
 }

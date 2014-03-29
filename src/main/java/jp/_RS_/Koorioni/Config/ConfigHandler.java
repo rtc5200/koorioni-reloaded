@@ -23,11 +23,14 @@ public class ConfigHandler {
 	private float hspeedlev;
 	private PotionEffect ItemEffect_SPEED;
 	private PotionEffect ItemEffect_INVISIBILITY;
+	private PotionEffect ItemEffect_INV_SLOW;
 	private int ItemAmount_SPEED;
 	private int ItemAmount_INVISIBILITY;
-	private Location OniSpawnLocation;
-	private Long OniWaitTime;
-	private Long SpawnProtectionTime;
+	private Location Oni_SpawnLocation;
+	private Long Oni_WaitTime;
+	private Long Time_SpawnProtection;
+	private Long Time_OniStiffonTouch;
+	private Long  UnableRescueTimeAfterTouch;
 	public ConfigHandler(File file)
 	{
 		this.config = YamlConfiguration.loadConfiguration(file);
@@ -41,16 +44,20 @@ public class ConfigHandler {
 		config.addDefault("WorldName", "world");
 		config.addDefault("StartLocation", "0,0,0");
 		config.addDefault("GameTime", 60L);
-		config.addDefault("SpawnProtectionTime", 10);
 		config.addDefault("Oni.SpeedLevel", 0.6f);
 		config.addDefault("Oni.SpawnLocation", "0,0,0");
 		config.addDefault("Oni.WaitTime",30L);
+		config.addDefault("Oni.StandByTimeOnTouch",5L);
 		config.addDefault("Item.Speed.Level", 2);
 		config.addDefault("Item.Speed.Duration", 1);
 		config.addDefault("Item.Speed.Amount", 10);
 		config.addDefault("Item.Invisibility.Level", 2);
 		config.addDefault("Item.Invisibility.Duration", 1);
 		config.addDefault("Item.Invisibility.Amount", 10);
+		config.addDefault("Item.Invisibility.Slow.Level",2);
+		config.addDefault("WaitTime.onSpawn", 10L);
+		config.addDefault("WaitTime.onRescue", 10L);
+
 		config.options().copyDefaults(true);
 		config.options().copyHeader(true);
 		config.options().header(Variables.getConfigHeader());
@@ -66,9 +73,11 @@ public class ConfigHandler {
 		StartLoc = readLocation(config.getString("StartLocation"));
 		GameTime = config.getLong("GameTime");
 		hspeedlev = Float.parseFloat(config.getString("Oni.SpeedLevel"));
-		OniSpawnLocation = readLocation(config.getString("Oni.SpawnLocation"));
-		OniWaitTime = config.getLong("Oni.WaitTime");
-		SpawnProtectionTime = (long) config.getInt("SpawnProtectionTime");
+		Oni_SpawnLocation = readLocation(config.getString("Oni.SpawnLocation"));
+		Oni_WaitTime = config.getLong("Oni.WaitTime");
+		Time_OniStiffonTouch = config.getLong("Oni.StandByTimeOnTouch");
+		Time_SpawnProtection = config.getLong("WaitTime.onSpawn");
+		UnableRescueTimeAfterTouch = config.getLong("WaitTime.onRescue");
 		int spl = config.getInt("Item.Speed.Level") - 1;
 		int spd = config.getInt("Item.Speed.Duration")*20;
 		if(spl < 0 || spd <= 0)
@@ -79,11 +88,18 @@ public class ConfigHandler {
 		}
 		int ivl = config.getInt("Item.Invisibility.Level") - 1;
 		int ivd = config.getInt("Item.Invisibility.Duration")*20;
+		int isl = config.getInt("Item.Invisibility.Slow.Level") - 1;
 		if(ivl < 0 || ivd <= 0)
 		{
 			ItemEffect_INVISIBILITY = null;
 		}else{
 			ItemEffect_INVISIBILITY = new PotionEffect(PotionEffectType.INVISIBILITY,ivd,ivl);
+		}
+		if(isl < 0)
+		{
+			ItemEffect_INV_SLOW = null;
+		}else{
+			ItemEffect_INV_SLOW = new PotionEffect(PotionEffectType.SLOW,ivd,isl);
 		}
 		ItemAmount_SPEED = config.getInt("Item.Speed.Amount");
 		ItemAmount_INVISIBILITY = config.getInt("Item.Invisibility.Amount");
@@ -129,6 +145,10 @@ public class ConfigHandler {
 	{
 		return ItemEffect_INVISIBILITY;
 	}
+	public PotionEffect getItemEffect_INV_SLOW()
+	{
+		return ItemEffect_INV_SLOW;
+	}
 	public ItemStack getSpeedItem()
 	{
 		if(ItemAmount_SPEED == 0)
@@ -147,15 +167,23 @@ public class ConfigHandler {
 	}
 	public Location getOniSpawnLocation()
 	{
-		return OniSpawnLocation;
+		return Oni_SpawnLocation;
 	}
 	public Long getOniWaitTime()
 	{
-		return OniWaitTime;
+		return Oni_WaitTime;
 	}
-	public Long getSpawnProtectionTime()
+	public Long getTime_SpawnProtection()
 	{
-		return SpawnProtectionTime;
+		return Time_SpawnProtection;
+	}
+	public Long getTime_OniStiffonTouch()
+	{
+		return Time_OniStiffonTouch;
+	}
+	public Long getUnableRescueTimeAfterTouch()
+	{
+		return UnableRescueTimeAfterTouch;
 	}
 	public void reload()
 	{

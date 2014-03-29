@@ -28,10 +28,10 @@ public class GameController {
 		this.main = main;
 		this.manager = main.getSbManager();
 		this.config = main.getConfigHandler();
+		intialize();
 	}
 	private void intialize()
 	{
-		main.getPlayerException().clearExceptionList();
 		if(startTasks.size() != 0)
 		{
 			for(BukkitTask t : startTasks)
@@ -46,6 +46,7 @@ public class GameController {
 	public void start(int a)
 	{
 		intialize();
+		main.getCoolTimeManager().clear();
 		ArrayList<Player> que = new ArrayList<Player>();
 		for(Player p : PlayerSort.sort(manager,Bukkit.getOnlinePlayers()))
 		{

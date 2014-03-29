@@ -56,11 +56,13 @@ public class ItemEvent implements Listener{
 				}else if(e.getMaterial().equals(Material.STICK))
 				{
 					PotionEffect pe = main.getConfigHandler().getItemEffect_INVISBILITY();
+					PotionEffect pe1 = main.getConfigHandler().getItemEffect_INV_SLOW();
 					if(pe != null)
 					{
 						if(!e.getPlayer().hasPotionEffect(PotionEffectType.INVISIBILITY))
 						{
 							e.getPlayer().addPotionEffect(pe);
+							e.getPlayer().addPotionEffect(pe1);
 							ItemUse(e.getPlayer(),e.getItem());
 						}
 					}

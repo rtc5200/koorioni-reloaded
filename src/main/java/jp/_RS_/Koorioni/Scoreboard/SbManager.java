@@ -106,18 +106,16 @@ public class SbManager implements Listener {
 		p.getInventory().addItem(i2);
 		p.updateInventory();
 		main.getConfigHandler().getStartLocation();
-		p.sendMessage("スポーン後" + ChatColor.GOLD + main.getConfigHandler().getSpawnProtectionTime() + ChatColor.RESET
-				+ "秒間はスポーン保護が適用されます。");
-		main.getPlayerException().addException(p);
+		main.getCoolTimeManager().addSpawnProtection(p);
 	}
 	public void RestoreToRedTeam(Player p)
 	{
 		red.addPlayer(p);
 		p.setDisplayName(ChatColor.RED + p.getName() + ChatColor.RESET);
 		updateSidebar();
-		main.getPlayerException().addException(p);
-		p.sendMessage("氷解除後" + ChatColor.GOLD + main.getConfigHandler().getSpawnProtectionTime() + ChatColor.RESET
-				+ "秒間はスポーン保護が適用されます。");
+		//main.getPlayerException().addSpawnProtection(p);
+		/*p.sendMessage("氷解除後" + ChatColor.GOLD + main.getConfigHandler().getSpawnProtectionTime() + ChatColor.RESET
+				+ "秒間はスポーン保護が適用されます。");*/
 	}
 	public void JoinBlueTeam(Player p)
 	{
@@ -333,7 +331,7 @@ public class SbManager implements Listener {
 		return (int)(percent * amount);
 	}
 
-	@EventHandler(priority = EventPriority.LOW)
+	@EventHandler
 	public void onMove(PlayerMoveEvent e)
 	{
 		if(!isBlackTeam(e.getPlayer()))return;
